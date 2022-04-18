@@ -1,0 +1,77 @@
+﻿@model ETicketing.ViewModels.Movie.MovieDetailsViewModel
+@using CoreModule.Source.Entity
+
+@{
+    ViewData["Title"] = "Movie details";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-12">
+            <div class="row g-0">
+               
+                <div class="col-md-4">
+                    <img src="~/images/uploads/@Model.ImageSource" onerror="this.onerror=null;this.src='/images/empty-profile.png';" width="100%"height="100%" alt="@Model.Name">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <p class="card-text"><b>Movie : @Model.Name</b></p>
+                        <p class="card-text">@Model.Description</p>
+                        <p class="card-text">
+                            <b>Cinema: </b>
+                            <span>
+                                @Model.CinemaHall
+                            </span>
+                        </p>
+                        <p class="card-text">
+                            <b>Producer: </b>
+                            <span >
+                                @Model.Producer
+                            </span>
+                        </p>
+                        <p class="card-text"><b>Category: </b>@Model.MovieCategory</p>
+                        <p class="card-text"><b>Start Date: </b>@Model.StartDate</p>
+                        <p class="card-text"><b>End Date: </b>@Model.EndDate</p>
+                        <p class="card-text ">
+                            <b>Status: </b>
+                            @if (Model.Status == Movie.Available)
+                            {
+                                <span class="badge bg-success text-white">@Model.Status</span>
+                            }
+                          
+                            else
+                            {
+                                <span class="badge bg-danger text-white">@Model.Status</span>
+                            }
+                        </p>
+                        <p class="card-text">
+                            <b>Actors: </b>
+                            <hr />
+                            <div class="row">
+                                @foreach (var actor in Model.Actors)
+                                {
+                                    <div class="col-md-3 text-center">
+                                        <img class="border-info rounded-circle" src="~/images/uploads/@actor.Image" onerror="this.onerror=null;this.src='/images/empty-profile.png';"
+                                        style="width: 100px;height:100px;" />
+                                        <br />
+                                        <span>@actor.Name</span>
+                                    </div>
+                                }
+                            </div>
+                        </p>
+
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="card-footer">
+                        <p class="card-text">
+                            <a class="btn btn-outline-primary float-right" asp-action="Index">
+                                Back to List
+                            </a>
+                                                   </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

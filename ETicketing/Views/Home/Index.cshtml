@@ -1,0 +1,120 @@
+﻿@model IEnumerable<ETicketing.ViewModels.HomePageViewModel>
+@using CoreModule.Source.Entity
+@{
+    ViewData["Title"] = "List of Movies";
+}
+<div style="margin:0px !important; margin-left:0px !important">
+    <div class="row" >
+        <div class="col-md-12 text-center mt-2" >
+            <h3 class="fw-bold"><i class="bi bi-ui-radios-grid "></i> Welcome to the official Eticketing site</h3>
+            <h4>Book your favourite movies here</h4>
+            <h6 class="fw-bold"><i class=" bi-bag-check"></i> Check Out the Latest Movies For Booking..............!</h6>
+            <hr />
+        </div>
+        @if (Model.Any())
+        {
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4  mb-3 mt-2">
+
+                    <div class="card shadow-sm " style="border : .40rem solid lightgrey;">
+
+                        <img src="~/images/uploads/@item.ImageSource" class="card-img-top image__fit" alt="@item.Name">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold"> @item.Name</h5>
+                            <p class="card-text">
+                            <p class="card-text"><b><i class="bi bi-film"></i> Cinema: </b>@item.CinemaHall</p>
+
+                            <p class="card-text"><b><i class="bi bi-calendar-check-fill"></i> </b>@item.StartDate - @item.EndDate</p>
+
+                            <p class="card-text ">
+                                <b><i class="bi bi-info-circle"> </i> Status: </b>
+                                    @if (item.Status == Movie.Available)
+                                    {
+                                    <span class="badge bg-success text-white">@item.Status</span>
+                                    }
+                                    else
+                                    {
+                                    <span class="badge bg-danger text-white">@item.Status</span>
+                                    }
+
+                            </p>
+
+
+                            </p>
+
+                            <a class="btn btn-outline-primary btn-sm float-right mt-2" asp-controller="Home" asp-action="MovieDetails" asp-route-movieId="@item.Id">
+                                <i class="bi bi-eye-fill"></i> Show Details
+                            </a>
+                            <button onclick="addToCart(this)" data-itemId="@item.Id" class="btn btn-primary btn-sm text-white pull-right mt-2 @(item.Status == Movie.Expired ? "disabled" : "")">
+                                <i class="bi bi-cart-plus"></i> Add to Cart ( Rs. @Math.Round(item.TicketPrice,0))
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            }
+        }
+        else
+        {
+            <section class="section-padding thankyou-section " style="margin:100px auto">
+                <div class="container bootstap-def">
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-lg-10 text-center">
+                           
+                            <h1 class="section-heading text-primary"> Empty </h1>
+                            <p>No Movies Available yet.</p>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+        }
+    </div>
+</div>
+
+@section scripts
+{
+<script>
+             function addToCart(item) {
+            event.preventDefault();
+           let itemId = $(item).attr("data-itemId");
+           $.ajax({
+            url: '/api/carts',
+            contentType: 'application/json; charset=utf-8',
+            type: 'Post',
+            data: JSON.stringify({MovieId:itemId}),
+            success: function (result) {
+             console.log(result)
+                Swal.fire(
+                  'Added Successfully!',
+                   `[Movie: ${result.MovieName}, Cinema: ${result.Cinema},
+                       Ticket : ${result.Quantity} , Price:Rs ${result.Rate}`,
+                  'success'
+                );
+                loadCartCount();
+
+            },
+               error: function (errorResponse) {
+                   console.log(errorResponse)
+                   if(errorResponse.status == 401)
+                   {
+                         window.location="/Account/Login";
+                       return false;
+                   }
+                    Swal.fire({
+                      title: 'Error!',
+                      text: errorResponse.responseText,
+                      icon: 'error',
+                     showConfirmButton: false,
+                      timer: 1500
+                    })
+                    }
+        });
+
+    }
+
+
+</script>
+}
+

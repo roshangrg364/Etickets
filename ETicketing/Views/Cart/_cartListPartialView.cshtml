@@ -1,0 +1,130 @@
+﻿@model IEnumerable<ETicketing.ViewModels.Cart.CartIndexViewModel>
+
+
+@{
+    ViewData["Title"] = "Ticket cart summary";
+}
+   <h5 class="card-header text-black">@ViewData["Title"]</h5>
+    @if (Model.Any())
+    {
+
+        <section class="cart-section section-padding">
+            <div class="container">
+
+                <div class="row mt-4">
+
+                    <div class="col-md-12 col-lg-8">
+                        <div class="table-wrapper bg-primary-offset bg-offset">
+                            <table class="table table-det table-mob-responsive">
+                                <thead>
+                                    <tr class="card-header bg-secondary text-white">
+                                        <th colspan="2">Particulars</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var cartItem in Model)
+                                    {
+                                        <tr >
+                                           
+                                            <td>
+                                                <div id="itemId" data-itemId="@cartItem.Id"></div>
+                                                <div class="d-block font-weight-bold mb-2"></div>
+                                                <div class="mb-2 font-weight-bold text-secondary">@cartItem.MovieName (Cinema :@cartItem.Cinema)</div>
+                                                <div class="cart-operation">
+                                                    @if (cartItem.Quantity > 1)
+                                                    {
+                                                        <button onclick="decreaseQuantity(this)" class="btn"><i class="bi bi-node-minus"></i></button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button class="btn "><i class="bi bi-node-minus"></i></button>
+                                                    }
+                                                    <input onchange="updateQuantity(this)" type="text" min="1" pattern="[1-9]+" onkeypress="return event.charCode >= 48 && event.charCode <= 57" class="text-center" value="@cartItem.Quantity" />
+                                                    <button onclick="increaseQuantity(this)" class="btn"><i class="bi bi-plus-circle"></i></button>
+
+                                                </div>
+                                                <button onclick="removeItem(this)" class="remove-cart-items btn btn-sm text-danger" data-itemId="@cartItem.Id">Remove</button>
+                                            </td>
+                                            <td>
+                                                <div class="d-block"> Rate Rs. @cartItem.Rate </div>
+                                                <div class="d-none d-lg-block mb-2"> Qty: @cartItem.Quantity</div>
+                                                <div class="d-none d-lg-block font-weight-bold">Total : Rs. @cartItem.Total</div>
+                                            </td>
+                                        </tr>
+
+
+                                    }
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="table-wrapper bg-offset">
+                            <table class="table table-calc">
+                                <thead>
+                                    <tr class="card-header bg-secondary text-white">
+                                        <th colspan="2">
+                                            <span class="font-weight-bold d-block">Summary</span>
+
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var cartItem in Model)
+                                    {
+                                        <tr>
+                                            <td>@cartItem.MovieName</td>
+                                            <td>Rs @cartItem.Total</td>
+                                        </tr>
+
+                                    }
+
+                                </tbody>
+                                <tfoot>
+                                    <tr class="card-footer">
+                                        <td class="text-primary-color font-weight-bold text-uppercase">Total</td>
+                                        <td>RS @Model.Sum(a=>a.Total)</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <div class="btn-wrap mt-5">
+
+                                <a asp-controller="Checkout" asp-action="Index" class="btn btn-success"><i class="bi bi-check2-all"></i> Proceed To Checkout</a>
+
+                            </div>
+                            <button class="btn pull-right btn-sm " onclick="continueShopping(this)"><u class="text-primary">Continue booking....</u></button>
+                        </div>
+                    </div>
+               
+                </div>
+            </div>
+        </section>
+
+    }
+    else
+    {
+        <section class="section-padding thankyou-section mt-4">
+            <div class="container bootstap-def">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-lg-10 text-center">
+                        <span class="d-block icon">
+                            <i class="ion ion-md-cart text-warning"></i>
+                        </span>
+                        <h1 class="section-heading text-primary">Your Cart is Empty </h1>
+                        <i class="bi bi-cart-x text-danger" style="font-size:100px"> </i>
+                        <p>Looks like you haven't added anything to cart yet.</p>
+                    </div>
+                    <div class="btn-wrap mt-1">
+
+                        <a onclick="continueShopping(this)" class="btn  rectangle w-100 pt-3 pb-3 text-white"><h4 class="bg-primary">Continue Shopping........</h4></a>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+

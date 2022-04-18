@@ -1,0 +1,129 @@
+﻿@model ETicketing.ViewModels.Movie.MovieIndexViewModel
+@using CoreModule.Source.Entity;
+@{
+    ViewData["Title"] = "List of Movies";
+
+}
+
+<div class="row">
+    <div class="card">
+        <h5 class="card-header bg-primary text-white">@ViewData["Title"]</h5>
+        <div class="card-body">
+            <form asp-coontroller="movie" asp-action="Index">
+                <div class="row">
+
+                    <div class="form-group col-md-2">
+                        <label asp-for="ProducerId" class="control-label"></label>
+                        <select asp-for="ProducerId" class="form-control" asp-items="ViewBag.Producers">
+                            <option value=0>All</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label asp-for="CategoryId" class="control-label"></label>
+                        <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.Categories">
+                            <option value=0>All</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label asp-for="ActorId" class="control-label"></label>
+                        <select asp-for="ActorId" class="form-control" asp-items="ViewBag.Actors">
+                            <option value=0>All</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label asp-for="CinemaId" class="control-label"></label>
+                        <select asp-for="CinemaId" class="form-control" asp-items="ViewBag.Cinemas">
+                            <option value=0>All</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2 mt-4">
+                        <button type="submit" class="btn btn-secondary btn-sm"><i class="bi bi-filter"></i> Filter</button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="row mt-4">
+            <div class=col-md-12 >
+                <a class="btn-info btn btn-sm text-white" asp-controller="Movie" asp-action="Create">  <i class="bi bi-plus-circle"></i> Add</a>
+            </div>
+            
+            <div class="col-md-12 mt-2 ">
+
+                <table class=table table-borderless>
+                    <thead>
+                        <tr class="card-header">
+                            <th>Image</th>
+                            <th> Name</th>
+                            <th> Category</th>
+                            <th>Cinema</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Ticket Price</th>
+                            <th>Status</th>                          
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.MovieDatas.Any())
+                        {
+                            @foreach (var item in Model.MovieDatas)
+                            {
+                                <tr>
+                                    <td >
+                                        <img class="rounded-circle image__fit" src="~/images/uploads/@item.Image" onerror="this.onerror=null;this.src='/images/empty-profile.png';" alt="@item.Name" style="width: 100px;height:100px" />
+                                    </td>
+                                    <td >
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    </td>
+                                     <td >
+                                        @Html.DisplayFor(modelItem => item.MovieCategory)
+                                    </td>
+                                    <td >
+                                        @Html.DisplayFor(modelItem => item.CinemaHall)
+                                    </td>
+                                    <td >
+                                        @Html.DisplayFor(modelItem => item.StartDate)
+                                    </td>
+                                    <td >
+                                        @Html.DisplayFor(modelItem => item.EndDate)
+                                    </td>
+                                    <td >
+                                        <span> Rs. @item.TicketPrice</span>
+                                    </td>
+                                    <td >
+                                        @if (item.Status == Movie.Available)
+                                        {
+                                            <span class="text-success"> @item.Status</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger">  @item.Status</span>
+                                        }
+
+                                    </td>
+                                 
+                                    <td >
+                                        <a class="btn btn-outline-primary btn-sm" asp-action="Update" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i>Edit </a> |
+                                        <a class="btn btn-outline-info btn-sm" asp-action="Details" asp-route-id="@item.Id"><i class="bi bi-eye"></i>Details </a>
+                                    </td>
+
+
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="8" class="text-center align-middle"> <h4>No movies added yet</h4></td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+                <div class="card-footer text-muted">
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>

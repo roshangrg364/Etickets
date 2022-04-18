@@ -1,0 +1,75 @@
+﻿@model IEnumerable<ETicketing.ViewModels.Producer.ProducerIndexViewModel>
+
+@{
+    ViewData["Title"] = "List of Producers";
+
+}
+
+<div class="row">
+    <div class="card">
+        <h5 class="card-header bg-primary text-white">@ViewData["Title"]</h5>
+        <div class="card-body">
+            <div class=col-md-12 mt-2>
+                <a class="btn-secondary btn btn-sm" asp-controller="Producer" asp-action="Create">  <i class="bi bi-plus-circle"></i> Add</a>
+            </div>
+            <div class="col-md-12 mt-2 ">
+
+                <table class=table table-bordered>
+                    <thead>
+                        <tr class="card-header">
+                            <th>Image</th>
+                            <th>Full Name</th>
+                            <th>Description</th>
+                           
+                            <th>Actions</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="align-middle">
+                                        <img class="rounded-circle image__fit" src="~/images/uploads/@item.Image" onerror="this.onerror=null;this.src='/images/empty-profile.png';" alt="@item.Name" style="width: 100px;height:100px" />
+                                    </td>
+                                    <td >
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    </td>
+                                    <td >
+                                        @if (item.Description.Length < 20)
+                                        {
+                                            <text> @item.Description</text>
+                                        }
+                                        else
+                                        {
+                                            var trimmedDescription = item.Description.Substring(1, 20) + ".....";
+                                            <Span title="@item.Description">@trimmedDescription </Span>
+                                        }
+
+                                    </td>
+                                 
+                                    <td >
+                                        <a class="btn btn-outline-primary btn-sm" asp-action="Update" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i>Edit </a> |
+                                        <a class="btn btn-outline-info btn-sm" asp-action="Details" asp-route-id="@item.Id"><i class="bi bi-eye"></i>Details </a> 
+                                    </td>
+
+
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                              <td colspan="4" class="text-center align-middle"> <h4>No Producer added yet</h4></td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>

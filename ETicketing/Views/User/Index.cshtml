@@ -1,0 +1,73 @@
+﻿@model IEnumerable<ETicketing.ViewModels.User.UserIndexViewModel>
+@using CoreModule.Source.Entity
+@{
+    ViewData["Title"] = "List of Users ";
+
+}
+
+<div class="row">
+    <div class="card">
+        <h5 class="card-header">@ViewData["Title"]</h5>
+        <div class="card-body">
+           
+            <div class="col-md-12 mt-2 ">
+
+                <table class=table table-borderless>
+                    <thead>
+                        <tr class="text-center bg-black text-white">
+                            <th>Name</th>
+                            <th>User Name</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    
+                                    <td class="align-middle text-center">
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    </td>
+                                     <td class="align-middle text-center">
+                                        @Html.DisplayFor(modelItem => item.Username)
+                                    </td>
+                                     <td class="align-middle text-center">
+                                        @Html.DisplayFor(modelItem => item.Email)
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        @if (item.Status == ApplicationUser.RoleAdmin)
+                                        {
+                                            <span class="badge bg-success text-white"> @item.Status</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-primary text-white"> @item.Status</span>
+                                        }
+
+                                    </td>
+                                   
+                                    <td class="align-middle text-center">
+                                        <a class="btn btn-primary" asp-action="ChangePassword" asp-route-userId="@item.Id"><i class="bi bi-lock"></i> Change Password</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center align-middle"> <h4>No Users  added yet</h4></td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+                <div class="card-footer text-muted">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

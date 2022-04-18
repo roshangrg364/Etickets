@@ -1,0 +1,169 @@
+﻿@{
+
+}
+
+<div id="cartDiv">
+
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function(){
+            LoadCartList();
+        });
+
+      function LoadCartList() {
+        $.ajax({
+            url: '@Url.Action("LoadCartPartialView", "Cart")',
+            contentType: 'application/html; charset=utf-8',
+            type: 'GET',
+            dataType: 'html',
+            success: function (result) {
+                console.log(result)
+                $('#cartDiv').html(result);
+            },
+            error: function (errorResponse) {
+                Swal.fire({
+                          title: 'Error!',
+                          text: "Error loading cart item",
+                          icon: 'error',
+                         showConfirmButton: false,
+                          timer: 1500
+                        });
+               
+            }
+        });
+      
+        }
+
+
+      function continueShopping() {
+        window.open("/Home/Index", "_self");
+    }
+
+     function increaseQuantity(item) {
+        event.preventDefault();
+        var cartItemId = $(item).closest("td").find("div#itemId").attr("data-itemId");
+        var Url = "/api/carts/" + cartItemId + "/increasequantity";
+
+           $.ajax({
+            url:Url ,
+            contentType: 'application/json; charset=utf-8',
+            type: 'patch',
+            dataType: 'json',
+            success: function (result) {
+                LoadCartList();
+               
+            },
+            error: function (errorResponse) {
+                console.log(errorResponse)
+               Swal.fire({
+                          title: 'Error!',
+                          text: "Error increasing item",
+                          icon: 'error',
+                         showConfirmButton: false,
+                          timer: 1500
+                        });
+                LoadCartList();
+            }
+        });
+
+    }
+
+      function decreaseQuantity(item) {
+        event.preventDefault();
+        var cartItemId = $(item).closest("td").find("div#itemId").attr("data-itemId");
+        var Url = "/api/carts/" + cartItemId + "/decreasequantity";
+
+           $.ajax({
+            url:Url ,
+            contentType: 'application/json; charset=utf-8',
+            type: 'patch',
+            dataType: 'json',
+            success: function (result) {
+                LoadCartList();
+               
+            },
+            error: function (errorResponse) {
+                 Swal.fire({
+                          title: 'Error!',
+                          text: "Error decreasing item",
+                          icon: 'error',
+                         showConfirmButton: false,
+                          timer: 1500
+                        });
+                LoadCartList();
+            }
+        });
+
+    }
+
+      function updateQuantity(item) {
+
+           event.preventDefault();
+           var qty = $(item).val();
+          var cartItemId = $(item).closest("td").find("div#itemId").attr("data-itemId");
+           var Url = "/api/carts/" + cartItemId + "/updateQuantity";
+           var data =
+           {
+               Quantity: qty
+           };
+           $.ajax({
+            url:Url ,
+            contentType: 'application/json; charset=utf-8',
+            type: 'put',
+             dataType: 'json',
+             data: JSON.stringify(data),
+            success: function (result) {
+                LoadCartList();
+            },
+            error: function (errorResponse) {
+                console.log(errorResponse);
+                Swal.fire({
+                          title: 'Error!',
+                          text: "Error updating item",
+                          icon: 'error',
+                         showConfirmButton: false,
+                          timer: 1500
+                        });
+             
+               LoadCartList();
+            }
+        });
+    }
+
+        function removeItem(item) {
+           event.preventDefault();
+           var qty = $(item).val();
+          var cartItemId = $(item).closest("td").find("div#itemId").attr("data-itemId");
+           var Url = "api/carts/" + cartItemId ;
+
+           $.ajax({
+            url:Url ,
+            contentType: 'application/json; charset=utf-8',
+            type: 'Delete',
+             dataType: 'json',
+           
+               success: function (result) {
+                   loadCartCount();
+               LoadCartList();
+              
+               
+            },
+            error: function (errorResponse) {
+                 Swal.fire({
+                          title: 'Error!',
+                          text: "Error removing item",
+                          icon: 'error',
+                         showConfirmButton: false,
+                          timer: 1500
+                        });
+               LoadCartList();
+             
+            }
+        });
+    }
+
+
+    </script>
+}

@@ -1,0 +1,115 @@
+﻿@model ETicketing.ViewModels.Order.OrderDetailViewModel
+@{
+
+}
+
+<section class="content mt-4 card shadow-sm ">
+    <div class="card-body">
+    <div class="row ">
+
+        <div class="col-md-12 card-header bg-primary text-white "><h4>Order Details</h4></div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="profile-username text-center text-uppercase text-bold card-header">
+                        <span class="text-bold text-uppercase "> Order Id : </span>#@Model.Id
+                    </h3>
+
+                    
+                    <ul class="list-group list-group-unbordered mt-2">
+                        <li class="list-group-item">
+                            <b>User :  @Model.User</b>
+
+                        </li>
+                        <li class="list-group-item">
+                            <b>Total Amount : </b> <span>Rs @Model.OrderItems.Sum(a=>a.Amount)</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Status :  @Model.Status</b>
+
+                        </li>
+
+                        <li class="list-group-item">
+                            <b>Completed On : </b>
+                            <a class="">
+                                @Model.CreatedOn
+                            </a>
+                        </li>
+
+                    </ul>
+                    <b class="mt-2 text-center">Shipping Address:</b>
+                       <ul class="list-group list-group-unbordered">
+                        <li class="list-group-item">
+                            <b>Name :  @Model.ShippingAddress.Name</b>
+
+                        </li>
+                        <li class="list-group-item">
+                            <b>Address : </b> <span>@Model.ShippingAddress.Address</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Phone :  @Model.ShippingAddress.PhoneNumber</b>
+
+                        </li>
+
+                        <li class="list-group-item">
+                            <b>Zip-code: </b>
+                            <b class="">
+                                @Model.ShippingAddress.ZipCode
+                            </b>
+                        </li>
+
+                    </ul>
+
+                    <a asp-controller="Order" asp-action="Index" class=" btn btn-primary btn-block btn-sm mt-2">
+                        <i class="bi bi-arrow-left-Circle"></i> &nbsp; Back
+                    </a>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9 mt-2">
+            <div class="card">
+                <div class="card-body">
+                    <table class=table table-bordered>
+                        <thead>
+                            <tr class="card-header">
+                                <th>Cinema</th>
+                                <th> Movie</th>
+                                <th>Quantity</th>
+                                <th>Ticket Price</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.OrderItems)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Cinema)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Movie)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Quantity)
+                                    </td>
+                                    <td>
+                                        Rs. @Html.DisplayFor(modelItem => item.TicketPrice)
+                                    </td>
+                                    <td>
+                                        Rs. @Html.DisplayFor(modelItem => item.Amount)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+
+</section>

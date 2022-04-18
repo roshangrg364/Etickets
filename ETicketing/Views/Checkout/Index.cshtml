@@ -1,0 +1,308 @@
+﻿@model IEnumerable<ETicketing.ViewModels.Cart.CartIndexViewModel>
+@{
+    var grandAmount = Model.Sum(a => a.Total);
+}
+
+<form id="regForm">
+
+    <div class="row">
+        <div class=" col-md-12">
+            <div class="tab">
+                <div class="card-header"> <h3>Shipping Address</h3></div>
+                <div class="card-body">
+                <div class="form-group  mt-2">
+                    <label class="control-label"> Full Name</label>
+                    <input placeholder="Full name..." id="Name" class="form-control" />
+                </div>
+                <div class="form-group  mt-2">
+                    <label class="control-label"> Address</label>
+                    <input placeholder="street address" id="Address" class="form-control" />
+                </div>
+                <div class="form-group  mt-2">
+                    <label class="control-label"> Zip Code</label>
+                    <input placeholder="Zip code" id="Zip-Code" class="form-control" />
+                </div>
+                <div class="form-group  mt-2">
+                    <label class="control-label"> Phone Number</label>
+                    <input type="number" placeholder="98xxxxxxxx" id="Phone" class="form-control" />
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab">
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="">
+                    <div class="card-header"><h4>Review</h4> </div>
+                </div>
+                <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Cinema</th>
+                            <th>Movie</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Subtotal</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="align-middle">@item.Cinema</td>
+                                <td class="align-middle">@item.MovieName</td>
+                                <td class="align-middle"> Rs @item.Rate</td>
+                                <td class="align-middle">  @item.Quantity</td>
+                                <td class="align-middle">Rs @item.Total</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3"></td>
+                            <td><b>Total:</b></td>
+                            <td>
+                                Rs @Model.Sum(a=>a.Total)
+                            </td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="tab">
+        <div class="card-header"><h4> Payment</h4></div>
+        <div class="card-body">
+        <div class="form-group  mt-2">
+            <label class="control-label"> Amount To Pay</label>
+            <input type="number" value="@grandAmount" max="@grandAmount" min="@grandAmount" id="paid-amount" class="form-control" />
+        </div>
+        </div>
+    </div>
+
+    <div class="mt-4 card-footer" style="overflow:auto;">
+        <div style="float:right;">
+            <a asp-controller="Home" asp-action="Index" style="display:none" id="continueShopping">ContinueShopping</a>
+            <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
+            <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+        </div>
+    </div>
+    <!-- Circles which indicates the steps of the form: -->
+    <div style="text-align:center;margin-top:40px;">
+        <span class="step"></span>
+        <span class="step"></span>
+        <span class="step"></span>
+
+    </div>
+</form>
+@section scripts
+{
+<script>
+       var currentTab = 0;
+       showTab(currentTab);
+
+       function showTab(n) {
+
+         var x = document.getElementsByClassName("tab");
+         x[n].style.display = "block";
+       
+         if (n == 0) {
+           document.getElementById("prevBtn").style.display = "none";
+           document.getElementById("continueShopping").style.display = "inline-block";
+         } else {
+           document.getElementById("prevBtn").style.display = "inline";
+             document.getElementById("continueShopping").style.display = "none";
+         }
+         if (n == (x.length - 1)) {
+           document.getElementById("nextBtn").innerHTML = "Submit";
+         } else {
+           document.getElementById("nextBtn").innerHTML = "Next";
+         }
+        
+         fixStepIndicator(n)
+       }
+
+       function nextPrev(n) {
+      
+         var x = document.getElementsByClassName("tab");
+    
+         if (n == 1 && !validateForm()) return false;
+    
+         x[currentTab].style.display = "none";
+        
+         currentTab = currentTab + n;
+        
+         if (currentTab >= x.length) {
+             submitForm();
+           return false;
+         }
+       if (currentTab <= x.length) {
+         showTab(currentTab);
+       }
+       }
+       function submitForm()
+       {
+           event.preventDefault();
+           let data={
+               Name :$("#Name").val(),
+               Address :$("#Address").val(),
+               ZipCode :$("#Zip-Code").val(),
+               Number :$("#Phone").val(),
+               PaidAmount :$("#paid-amount").val(),
+
+           }
+           
+                $.ajax({
+               url: 'api/checkouts',
+               contentType: 'application/json; charset=utf-8',
+               type: 'Post',
+               dataType: 'json',
+               data:JSON.stringify(data),
+               success: function (result) {
+                   console.log(result);
+                     window.location ="/Checkout/Success?orderId="+result;
+               },
+               error: function (errorResponse) {
+                   console.log(errorResponse)
+                   Swal.fire({
+                             title: 'Error!',
+                             text:errorResponse.responseText,
+                             icon: 'error',
+                            showConfirmButton: false,
+                             timer: 1500
+                           });
+
+               }
+           });
+       }
+       function validateForm() {
+      
+         var x, y, i, valid = true;
+         x = document.getElementsByClassName("tab");
+         y = x[currentTab].getElementsByTagName("input");
+       
+         for (i = 0; i < y.length; i++) {
+        
+           if (y[i].value == "") {
+          
+             y[i].className += " invalid";
+            
+             valid = false;
+           }
+         }
+     
+         if (valid) {
+           document.getElementsByClassName("step")[currentTab].className += " finish";
+         }
+         return valid; 
+       }
+
+       function fixStepIndicator(n) {
+        
+         var i, x = document.getElementsByClassName("step");
+         for (i = 0; i < x.length; i++) {
+           x[i].className = x[i].className.replace(" active", "");
+         }
+        
+         x[n].className += " active";
+       }
+</script>
+}
+
+
+@section styles{
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        background-color: #f1f1f1;
+    }
+
+    #regForm {
+        background-color: #ffffff;
+        margin: 50px auto;
+        font-family: Raleway;
+        padding: 40px;
+        width: 70%;
+        min-width: 300px;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    input {
+        padding: 10px;
+        width: 100%;
+        font-size: 17px;
+        font-family: Raleway;
+        border: 1px solid #aaaaaa;
+    }
+
+        /* Mark input boxes that gets an error on validation: */
+        input.invalid {
+            background-color: #ffdddd;
+        }
+
+    /* Hide all steps by default: */
+    .tab {
+        display: none;
+    }
+
+    button {
+        background-color: #04AA6D;
+        color: #ffffff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 17px;
+        font-family: Raleway;
+        cursor: pointer;
+    }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+    #prevBtn {
+        background-color: #bbbbbb;
+    }
+
+    /* Make circles that indicate the steps of the form: */
+    .step {
+        height: 15px;
+        width: 15px;
+        margin: 0 2px;
+        background-color: #bbbbbb;
+        border: none;
+        border-radius: 50%;
+        display: inline-block;
+        opacity: 0.5;
+    }
+
+        .step.active {
+            opacity: 1;
+        }
+
+        /* Mark the steps that are finished and valid: */
+        .step.finish {
+            background-color: #04AA6D;
+        }
+</style>
+}@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}

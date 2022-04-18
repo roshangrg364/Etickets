@@ -1,0 +1,26 @@
+﻿@model ETicketing.ViewModels.Producer.ProducerDetailsViewModel
+
+@{
+    ViewData["Title"] = "Details of the actor";
+}
+
+<div class="row text">
+    <div class="col-md-8 offset-2">
+        <p>
+            <h1>Details for @Model.Name</h1>
+        </p>
+        <div class="row">
+            <div class="card">
+                <img class="card-img-top" src="~/images/uploads/@Model.Image" onerror="this.onerror=null;this.src='/images/empty-profile.png';" alt="@Model.Name">
+                <div class="card-body">
+                    <h5 class="card-title">Description</h5>
+                    <p class="card-text">@Model.Description</p>
+                    <a asp-action="Index"class="btn btn-primary">Go to Index</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+

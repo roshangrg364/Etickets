@@ -1,0 +1,50 @@
+﻿@model IEnumerable<ETicketing.ViewModels.MovieCategory.MovieCategoryIndexViewModel>
+
+@{
+    ViewData["Title"] = "List of Category";
+
+}
+
+<div class="row">
+    <div class="card">
+        <h5 class="card-header bg-primary text-white">@ViewData["Title"]</h5>
+        <div class="card-body">
+            <div class=col-md-12>
+                <a class="btn-secondary btn btn-sm " asp-controller="MovieCategory" asp-action="Create">  <i class="bi bi-plus-circle"></i> Add</a>
+            </div>
+            <div class="col-md-12 mt-2 ">
+
+                <table class=table table-bordered>
+                    <thead>
+                        <tr class="card-header">
+                            <th>Id</th>
+                            <th> Name</th>                          
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td >
+                                    @Html.DisplayFor(modelItem => item.Id)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                               
+                                <td >
+                                    <a class="btn btn-outline-primary btn-sm" asp-action="Update" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i> Edit </a>
+                                </td>
+
+
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,40 @@
+﻿@model ETicketing.ViewModels.Account.LoginViewModel; 
+
+
+@{ 
+    ViewData["Title"] = "Log in to your account";
+}
+
+<div class="row">
+    <div class="col-md-6 offset-3">
+        <p>
+            <h4>@ViewData["Title"] </h4>
+        </p>
+
+
+        <div class="row">
+            <div class="col-md-8 offset-2">
+                <form asp-controller="Account" asp-action="Login">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group mt-2">
+                        <label asp-for="UserName" class="control-label mt-1">Username</label>
+                        <input asp-for="UserName" class="form-control" />
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mt-2">
+                        <label asp-for="Password" class="control-label mt-1"></label>
+                        <input type="password" asp-for="Password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    
+                    <input asp-for="ReturnUrl"hidden />
+                    <div class="form-group mt-3">
+                        <button  class="btn btn-outline-success float-right" type="submit" value="Log in" ><i class="bi bi-layer-forward"></i>Login</button>
+                        <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Index"><i class="bi bi-backspace"></i>Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

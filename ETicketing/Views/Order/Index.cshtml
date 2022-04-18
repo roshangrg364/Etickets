@@ -1,0 +1,72 @@
+﻿@model IEnumerable<ETicketing.ViewModels.Order.OrderIndexViewModel>
+
+@{
+    ViewData["Title"] = "List of Orders";
+
+}
+
+<div class="row">
+    <div class="card">
+        <h5 class="card-header bg-primary text-white">@ViewData["Title"]</h5>
+        <div class="card-body">
+           
+            <div class="col-md-12 mt-2 ">
+
+                <table class=table table-borderless>
+                    <thead>
+                        <tr class="card-header">
+                            <th>Id</th>
+                            <th>User</th>
+                            <th>Status</th>                           
+                            <th>Created On</th>                           
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                  
+                                    <td >
+                                        @Html.DisplayFor(modelItem => item.Id)
+                                    </td>
+
+                                    <td >
+                                        @Html.DisplayFor(modelItem => item.User)
+                                    </td>
+
+                                    <td >
+                                        @Html.DisplayFor(modelItem => item.Status)
+                                    </td>
+
+                                    <td >
+                                        @Html.DisplayFor(modelItem => item.CreatedOn)
+                                    </td>
+                                  
+                                   
+                                    <td >    
+                                        <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@item.Id"><i class="bi bi-eye"></i>Details </a> 
+                                    </td>
+                                  
+
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center align-middle"> <h4>No Orders yet</h4></td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+                <div class="card-footer text-muted">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
