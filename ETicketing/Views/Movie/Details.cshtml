@@ -11,7 +11,7 @@
             <div class="row g-0">
                
                 <div class="col-md-4">
-                    <img src="~/images/uploads/@Model.ImageSource" onerror="this.onerror=null;this.src='/images/empty-profile.png';" width="100%"height="100%" alt="@Model.Name">
+                    <img class="image_fit_all" src="~/images/uploads/@Model.ImageSource" onerror="this.onerror=null;this.src='/images/empty-profile.png';" width="100%"height="100%" alt="@Model.Name">
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
@@ -51,7 +51,7 @@
                                 @foreach (var actor in Model.Actors)
                                 {
                                     <div class="col-md-3 text-center">
-                                        <img class="border-info rounded-circle" src="~/images/uploads/@actor.Image" onerror="this.onerror=null;this.src='/images/empty-profile.png';"
+                                        <img class="image__fit border-info rounded-circle" src="~/images/uploads/@actor.Image" onerror="this.onerror=null;this.src='/images/empty-profile.png';"
                                         style="width: 100px;height:100px;" />
                                         <br />
                                         <a asp-controller="Actor" asp-action="Details" asp-route-id="@actor.Id">@actor.Name</a>
