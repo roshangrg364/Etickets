@@ -12,7 +12,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12 ">
-                    <form asp-action="Create" enctype="multipart/form-data">
+                    <form id="categoryForm" enctype="multipart/form-data">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
 
@@ -33,4 +33,68 @@
         </div>
     </div>
 </div>
+
+@section scripts{
+<script>
+    const categoryForm = document.getElementById("categoryForm");
+
+    async function CreateCategory(){
+       try
+       {
+           const url ="/api/categories";
+            const data ={
+                Name:document.querySelector("#Name").value
+                 };
+            const options ={
+                  method: "post",
+                 headers: {
+                  "Content-Type": "application/json"
+                 },
+                 body:JSON.stringify(data)
+            };
+
+
+            const response= await fetch(url,options);
+                if(!response.ok){
+                  throw new Error( await response.text());
+           
+                }
+          const responsedata=await response.json();
+         return responsedata;
+       }
+           
+      catch(error){
+           
+           throw error;
+      }
+        
+    }
+    categoryForm.addEventListener('submit',async(e)=>{
+         e.preventDefault();
+         try    {     
+             const resdata = await CreateCategory();
+                Swal.fire({
+                        title: 'Success!',
+                        text: resdata,
+                        icon: 'success',
+                        showConfirmButton: true,
+                      
+                        });
+
+                 setInterval(()=>{ window.location.href="/moviecategory/index"},1500);
+         }
+         catch(error)
+         {
+                  Swal.fire({
+                        title: 'Error!',
+                        text: error,
+                        icon: 'error',
+                        showConfirmButton: true,
+                      
+                        }); 
+         }
+    })
+
+</script>
+}
 

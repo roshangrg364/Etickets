@@ -1,5 +1,6 @@
 ﻿using CoreModule.DbContextConfig;
 using CoreModule.Source.Repository;
+using EmailModule.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,9 +25,11 @@ namespace CoreModule.UOW
             Users = new UserRepository(_context);
             ShippingAddress = new ShippingAddressRepository(_context);
             Orders = new OrderRepository(_context);
+            EmailTemplates = new EmailTemplateRepository(_context);
         }
 
         public ActorRepositoryInterface Actors { get; }
+        public EmailTemplateRepositoryInterface EmailTemplates { get; }
         public UserRepositoryInterface Users { get; }
         public ActorMovieRepositoryInterface ActorMovies { get; }
 

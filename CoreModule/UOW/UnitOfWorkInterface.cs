@@ -1,5 +1,6 @@
 ﻿
 using CoreModule.Source.Repository;
+using EmailModule.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace CoreModule.UOW
         UserRepositoryInterface Users { get; }
         ShippingAddressRepositoryInterface ShippingAddress { get; }
         OrderRepositoryInterface Orders { get; }
+        EmailTemplateRepositoryInterface EmailTemplates { get; }
         Task<int> Complete();
     }
 }

@@ -1,7 +1,7 @@
-﻿@model ETicketing.ViewModels.Account.LoginViewModel; 
+﻿@model ETicketing.ViewModels.Account.LoginViewModel;
 
 
-@{ 
+@{
     ViewData["Title"] = "Log in to your account";
 }
 
@@ -14,23 +14,23 @@
 
         <div class="row">
             <div class="col-md-8 offset-2">
-                <form asp-controller="Account" asp-action="Login">
+                <form id="loginForm">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                     <div class="form-group mt-2">
                         <label asp-for="UserName" class="control-label mt-1">Username</label>
                         <input asp-for="UserName" class="form-control" />
-                        <span asp-validation-for="UserName" class="text-danger"></span>
+                        <span id="username-msg" class="text-danger"></span>
                     </div>
                     <div class="form-group mt-2">
                         <label asp-for="Password" class="control-label mt-1"></label>
-                        <input type="password" asp-for="Password" class="form-control" />
-                        <span asp-validation-for="Password" class="text-danger"></span>
+                        <input asp-for="Password" type="password" class="form-control" />
+                        <span id="password-msg" class="text-danger"></span>
                     </div>
-                    
-                    <input asp-for="ReturnUrl"hidden />
+
+                    <input asp-for="ReturnUrl" hidden />
                     <div class="form-group mt-3">
-                        <button  class="btn btn-outline-success float-right" type="submit" value="Log in" ><i class="bi bi-layer-forward"></i>Login</button>
+                        <button class="btn btn-outline-success float-right " id="btn-login" type="submit" value="Log in"><i class="bi bi-layer-forward"></i>Login</button>
                         <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Index"><i class="bi bi-backspace"></i>Cancel</a>
                     </div>
                 </form>
@@ -38,3 +38,103 @@
         </div>
     </div>
 </div>
+
+
+@section Scripts{
+<script>
+
+     const form = document.getElementById("loginForm");
+     const usernameMsg =  document.querySelector("#username-msg");
+     const passwordMsg =  document.querySelector("#password-msg");
+      const usernameElm = document.querySelector("#UserName");
+        const passwordElm = document.querySelector("#Password");
+
+        usernameElm.addEventListener('mouseup',()=>{
+           usernameMsg.innerHTML ="";
+        });
+        
+        passwordElm.addEventListener('mouseup',()=>{
+           passwordMsg.innerHTML ="";
+        });
+
+     function isEmptyOrSpaces(str){
+       return str === null || str.match(/^ *$/) !== null;
+        }
+     const login = async function(){
+         try{
+           const url = "/api/logins";
+         const username = usernameElm.value;
+        const password = passwordElm.value;
+        const returnUrl = document.querySelector("#ReturnUrl").value;
+
+     if(isEmptyOrSpaces(username) || isEmptyOrSpaces(password)){
+      if(isEmptyOrSpaces(username)){
+             usernameMsg.innerHTML = "Username is required"; 
+         }
+          if(isEmptyOrSpaces(password)){
+        passwordMsg.innerHTML = "Password is required"; 
+        }
+        return false;
+     }
+        
+        const data ={
+            UserName : username,
+            Password : password,
+            ReturnUrl : returnUrl
+        }
+
+         const options ={
+                   method: "post",
+                    headers: {
+                  "Content-Type": "application/json"
+                 },
+                  body:JSON.stringify(data)
+             };
+
+          const response = await fetch(url,options);
+           if(!response.ok)
+           {
+                 throw new Error( await response.text());
+           }
+          return await response.json();
+         }
+         catch(error)
+         {
+              throw error;
+         }
+
+
+     }
+
+     form.addEventListener("submit",async(e)=>{
+         e.preventDefault();
+
+         try
+         {
+                const data = await  login();
+                if(!data) return false;
+                   Swal.fire({
+                        title: 'Success!',
+                        text: "login successfull",
+                        icon: 'success',
+                        showConfirmButton: true
+                        });
+
+                        setInterval(()=>{
+                            window.location.href =data.returnUrl;
+                        },1500);
+         }
+        catch(error)
+        {
+                       Swal.fire({
+                         title: 'Error!',
+                         text: error,
+                         icon: 'error',
+                         showConfirmButton: true
+                         });
+         }
+
+     })
+
+</script>
+}

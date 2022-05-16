@@ -13,7 +13,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12 ">
-                    <form asp-action="Create" enctype="multipart/form-data">
+                    <form id="createForm" enctype="multipart/form-data">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                         <div class="form-group text-center">
@@ -48,20 +48,80 @@
 
 @section Scripts{
 <script>
+     const fileElm =  document.getElementById("file");
+     const form = document.getElementById("createForm");
+     fileElm.addEventListener("change",function () {
+         readURL(this);
+     });
+     function readURL(input) {
 
-    $("#file").on("change",function () {
-        readURL(this);
-    });
-    function readURL(input) {
+         if (input.files && input.files[0]) {
+             var reader = new FileReader();
 
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
+             reader.onload = function (e) {
+                 $('#ProfilePicturePreview').attr('src', e.target.result);
+             };
+             reader.readAsDataURL(input.files[0]);
+         }
+     }
 
-            reader.onload = function (e) {
-                $('#ProfilePicturePreview').attr('src', e.target.result);
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
+     const createActor = async function(){
+         try{
+                 const url = "/api/actors";
+        let formData = new FormData();
+         formData.append("Name",$("#Name").val());
+         formData.append("Description",$("#Description").val());
+         formData.append("Image",file.files[0]);
+
+         const options ={
+                   method: "post",
+                  body:formData
+             };
+             console.log()
+          const response = await fetch(url,options);
+           if(!response.ok)
+           {
+               console.log(response);
+                 throw new Error( await response.text());
+           }
+          return await response.json();
+         }
+         catch(error)
+         {
+              throw error;
+         }
+
+
+     }
+
+     form.addEventListener("submit",async(e)=>{
+         e.preventDefault();
+         try
+         {
+                const data = await  createActor();
+
+                   Swal.fire({
+                        title: 'Success!',
+                        text: data,
+                        icon: 'success',
+                        showConfirmButton: true 
+                        });
+
+                        setInterval(()=>{
+                            window.location.href ="/Actor/Index";
+                        },1500);
+         }
+        catch(error)
+        {
+                       Swal.fire({
+                         title: 'Error!',
+                         text: error,
+                         icon: 'error',
+                         showConfirmButton: true
+                         });
+         }
+
+     })
+
 </script>
 }

@@ -12,7 +12,7 @@
             </div>
         <div class="row">
             <div class="col-md-12">
-                <form asp-action="Update" enctype="multipart/form-data">
+                <form id="updateForm" enctype="multipart/form-data">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input asp-for="Id" hidden />
                    
@@ -34,4 +34,69 @@
     </div>
 </div>
 </div>
+
+@section scripts{
+<script>
+    const categoryForm = document.getElementById("updateForm");
+
+    async function EditCategory(){
+       try
+       {
+           const id = document.getElementById("Id").value;
+           const url =`/api/categories/${id}`;
+            const data ={
+                Name:document.querySelector("#Name").value
+                 };
+            const options ={
+                  method: "put",
+                 headers: {
+                  "Content-Type": "application/json"
+                 },
+                 body:JSON.stringify(data)
+            };
+
+
+            const response= await fetch(url,options);
+                if(!response.ok){
+                  throw new Error( await response.text());
+           
+                }
+            const resdata=await response.json();
+               return resdata;
+       }
+           
+      catch(error){
+           throw error;  
+      }
+        
+    }
+    categoryForm.addEventListener('submit',async(e)=>{
+         e.preventDefault();
+         try{
+            const data= await EditCategory();
+                 Swal.fire({
+                        title: 'Success!',
+                        text: data,
+                        icon: 'success',
+                        showConfirmButton: true,
+                      
+                        });
+
+                 setInterval(()=>{ window.location.href="/moviecategory/index"},1000);
+         }
+          catch(error){
+           
+              Swal.fire({
+                        title: 'Error!',
+                        text: error,
+                        icon: 'error',
+                        showConfirmButton: true,
+                      
+                        });     
+      }
+      
+    })
+
+</script>
+}
 

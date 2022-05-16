@@ -51,28 +51,6 @@ namespace ETicketing.Controllers
             return View();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create(ActorCreateViewModel model)
-        {
-            try
-            {
-                if(ModelState.IsValid)
-                {
-                    string? imagePath = await ValidateAndUploadImage(model.Image);
-                    var createDto = new ActorCreateDto(model.Name, model.Description, imagePath);
-                    await _actorService.Create(createDto);
-                    _notify.AddSuccessToastMessage("Actor Added Successfully");
-                    return RedirectToAction(nameof(Index));
-                }
-            }
-            catch (Exception ex)
-            {
-
-                _logger.LogError(ex.Message);
-                _notify.AddErrorToastMessage(ex.Message);
-            }
-            return View(model);
-        }
 
         [HttpGet]
         public async Task<IActionResult> Update(int id)
@@ -97,27 +75,7 @@ namespace ETicketing.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Update(ActorUpdateViewModel model)
-        {
-            try
-            {
-                if(ModelState.IsValid)
-                {
-                    string? imagePath = await ValidateAndUploadImage(model.Image);
-                    var updateDto = new ActorUpdateDto(model.Id, model.Name, model.Description, imagePath);
-                    await _actorService.Update(updateDto);
-                    return RedirectToAction(nameof(Index));
-                }
-            }
-            catch (Exception ex)
-            {
-
-                _logger.LogError(ex.Message);
-                _notify.AddErrorToastMessage(ex.Message);
-            }
-            return View(model);
-        }
+   
         public async Task<IActionResult> Details(int id)
         {
             try
@@ -134,24 +92,8 @@ namespace ETicketing.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-      [HttpGet]
-        public async Task<IActionResult> Delete(int id)
-        {
-           
-            await _actorService.Remove(id);
-            return RedirectToAction(nameof(Index));
-        }
 
-        private async Task<string> ValidateAndUploadImage(IFormFile file)
-        {
-            string? imagePath = null;
-            if (file != null &&file.Length > 0)
-            {
-                imagePath = await _imageUploader.UploadToTemporary(file);
-            }
-
-            return imagePath;
-        }
+      
         private static ActorDetailsViewModel ConfigureActorDetails(CoreModule.Source.Entity.Actor actor)
         {
             return new ActorDetailsViewModel

@@ -32,6 +32,7 @@ namespace CoreModule.DbContextConfig
             builder.ApplyConfiguration(new ShippingAddressMapping());
             builder.ApplyConfiguration(new OrderMapping());
             builder.ApplyConfiguration(new OrderItemMapping());
+            builder.ApplyConfiguration(new EmailTemplateMapping());
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

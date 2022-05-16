@@ -13,7 +13,7 @@
             </div>
         <div class="row">
             <div class="col-md-12">
-                <form asp-action="Update" enctype="multipart/form-data">
+                <form id="updateForm" enctype="multipart/form-data">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input asp-for="Id" hidden />
                     <div class="form-group text-center">
@@ -48,11 +48,12 @@
 
 @section Scripts{ 
     <script>
-
-        $("#file").on("change",function () {         
+         const fileElm =  document.getElementById("file");
+       const form = document.getElementById("updateForm");
+        file.addEventListener("change",function () {         
             readURL(this);
         });
-        function readURL(input) {
+         function readURL(input) {
 
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
@@ -63,5 +64,65 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
+
+
+
+         const udpateActor = async function(){
+         try
+         {
+                 const url = "/api/actors/"+ $("#Id").val();
+                let formData = new FormData();
+                 formData.append("Name",$("#Name").val());
+                 formData.append("Description",$("#Description").val());
+                 formData.append("Image",file.files[0]);
+
+                 const options ={
+                           method: "put",
+                          body:formData
+                     };
+
+                  const response = await fetch(url,options);
+                   if(!response.ok)
+                   {
+                         throw new Error(await response.text());
+                   }
+                  return await response.json();
+                 }
+             catch(error)
+             {
+              throw error;
+             }
+         }
+
+
+     form.addEventListener("submit",async(e)=>{
+         e.preventDefault();
+         try
+         {
+                const data = await  udpateActor();
+
+                   Swal.fire({
+                        title: 'Success!',
+                        text: data,
+                        icon: 'success',
+                        showConfirmButton: true 
+                        });
+
+                        setInterval(()=>{
+                            window.location.href ="/Actor/Index";
+                        },1500);
+                 }
+                catch(error)
+                {
+                       Swal.fire({
+                         title: 'Error!',
+                         text: error,
+                         icon: 'error',
+                         showConfirmButton: true
+                         });
+                 }
+
+     })
+
     </script>
 }

@@ -42,28 +42,8 @@ namespace ETicketing.Controllers
         {
             return View();
         }
-        [HttpPost]
-        public async Task<IActionResult> Create(MovieCategoryCreateViewModel model)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    var movieCategoryCreateDto = new MovieCategoryCreateDto(model.Name);
-                    await _movieCategoryService.Create(movieCategoryCreateDto);
-                    _notify.AddSuccessToastMessage("Category Created Successfully");
-                    return RedirectToAction(nameof(Index));
-                }
 
-            }
-            catch (Exception ex)
-            {
-
-                _notify.AddErrorToastMessage(ex.Message);
-                _logger.LogError(ex,ex.Message);
-            }
-            return View(model);
-        }
+   
 
         public async Task<IActionResult> Update(int id)
         {
@@ -84,26 +64,6 @@ namespace ETicketing.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
-
-        [HttpPost]
-        public async Task<IActionResult> Update(MovieCategoryUpdateViewModel model)
-        {
-            try
-            {
-                if(ModelState.IsValid)
-                {
-                    var updateDto = new MovieCategoryUpdateDto(model.Id, model.Name);
-                    await _movieCategoryService.Update(updateDto);
-                    _notify.AddSuccessToastMessage("Category Updated Successfully");
-                    return RedirectToAction(nameof(Index));
-                }
-            }
-            catch (Exception ex)
-            {
-                _notify.AddErrorToastMessage(ex.Message);
-                _logger.LogError(ex.Message);
-            }
-            return View(model);
-        }
+    
     }
 }

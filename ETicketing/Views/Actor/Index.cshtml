@@ -84,8 +84,34 @@
                   title: 'Confirm!',
                   content: 'Do you really want to delete this actor?',
                   buttons: {
-                      confirm: function () {
-                         window.open("/Actor/Delete?id="+$(item).attr("data-itemId"),"_self")
+                      confirm: async function () {
+                         try{
+                             const response = await fetch(`/api/actors/${item.dataset.itemid}`, {
+                                method: "delete"
+                              });
+
+                          if (!response.ok) {
+                            const message = await response.text();
+                            throw new Error(message);
+                          }
+
+                         item.closest("tr").remove();
+                          Swal.fire({
+                             title: 'Success!',
+                             text: await response.json(),
+                             icon: 'success',
+                             showConfirmButton: true
+                             });
+                         }
+                         catch(error)
+                         {
+                               Swal.fire({
+                             title: 'Error!',
+                             text: error,
+                             icon: 'error',
+                             showConfirmButton: true
+                             });
+                         }
                       },
                       cancel: function () {
 

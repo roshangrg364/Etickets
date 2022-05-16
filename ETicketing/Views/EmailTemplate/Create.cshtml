@@ -1,0 +1,61 @@
+﻿@model ETicketing.ViewModels.Email.EmailTemplateCreateViewModel
+@using EmailModule.Entity
+@{
+}
+
+<h2>Create Email Template</h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body card-rounded">
+                <h4 class="card-title  card-title-dash">Keys</h4>
+
+                @foreach (var key in EmailTemplate.TemplateVariables)
+                {
+                    <div class="list align-items-center border-bottom py-2">
+                        <div class="wrapper w-100">
+                            <p class="mb-2 font-weight-medium">
+                                @key
+                            </p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <form method="post" asp-area="" asp-controller="EmailTemplate" asp-action="Create">
+            <div class="form-group">
+                <label>Type</label>
+                @(Html.DropDownListFor(a => a.Type, Model.TypeSelectList, "-select", new { @class = "form-control" }))
+                @Html.ValidationMessageFor(a => a.Type)
+            </div>
+
+            <div class="form-group">
+                <label>Template</label>
+                <textarea id="editor" asp-for="Template"></textarea>
+                @Html.ValidationMessageFor(a => a.Template)
+            </div>
+
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">save </button>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section scripts
+{
+    <script>
+      $(document).ready(function(){
+        CKEDITOR.replace("editor")
+    })
+    </script>
+
+}

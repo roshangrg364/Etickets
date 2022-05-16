@@ -1,0 +1,7 @@
+{
+  "baseUrl": "https://localhost:44319",
+  "env": {
+    "Username": "admin",
+    "Password": "admin"
+  }
+}

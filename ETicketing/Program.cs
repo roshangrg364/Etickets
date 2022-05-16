@@ -1,5 +1,6 @@
 using CoreModule.DbContextConfig;
 using CoreModule.Source.Entity;
+using EmailModule.Entity;
 using ETicketing;
 using ETicketing.Extensions;
 using ETicketing.Helper;
@@ -101,6 +102,10 @@ builder.Services.AddMvc()
         PositionClass = ToastPositions.TopRight
     })
      .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null); ;
+
+//Email Configuration
+var emailConfig = builder.Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
+builder.Services.AddSingleton(emailConfig);
 
 builder.Host.ConfigureLogging((hostingContext, logging) =>
 {

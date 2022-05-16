@@ -3,6 +3,8 @@ using CoreModule.Source.Repository;
 using CoreModule.Source.Service;
 using CoreModule.Source.Service.Image;
 using CoreModule.UOW;
+using EmailModule.Repository;
+using EmailModule.Service;
 using ETicketing.Helper;
 namespace ETicketing
 {
@@ -27,6 +29,7 @@ namespace ETicketing
             services.AddScoped<CartRepositoryInterface, CartRepository>();
             services.AddScoped<ShippingAddressRepositoryInterface, ShippingAddressRepository>();
             services.AddScoped<OrderRepositoryInterface, OrderRepository>();
+            services.AddScoped<EmailTemplateRepositoryInterface, EmailTemplateRepository>();
            
         }
         private static void UserService(this IServiceCollection services)
@@ -39,6 +42,8 @@ namespace ETicketing
             services.AddScoped<UserServiceInterface, UserService>();
             services.AddScoped<CartServiceInterface, CartService>();
             services.AddScoped<CheckoutServiceInterface, CheckoutService>();
+            services.AddScoped<EmailTemplateServiceInterface, EmailTemplateService>();
+            services.AddScoped<EmailSenderServiceInterface, EmailSenderService>();
         }
     }
 }
